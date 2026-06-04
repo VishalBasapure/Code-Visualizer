@@ -18,7 +18,7 @@ const CODE_HISTORY_LIMIT = 5;
 const API_BASE_URL =
     ["localhost", "127.0.0.1"].includes(window.location.hostname)
         ? "http://127.0.0.1:8000"
-        : "https://your-render-backend.onrender.com";
+        : "https://code-visualizer-otf6.onrender.com";
 async function runCode() {
     const code = document.getElementById("code").value;
     const inputs = readProgramInputs();
