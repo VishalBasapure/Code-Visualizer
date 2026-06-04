@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Visualizer</title>
+    <link rel="stylesheet" href="style.css?v=input-2">
+</head>
+<body>
+    <main class="workspace">
+        <section class="editor-pane">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">Learn by watching code run</p>
+                    <h1>CODE VISUALIZER</h1>
+                    <h2>Only For Python</h2>
+                </div>
+                <button class="primary-button" onclick="runCode()">RUN CODE</button>
+            </header>
+
+            <div class="examples" aria-label="Code sections">
+                <button data-code-view="original" onclick="showCodeSection('original')">Original Code</button>
+                <button data-code-view="loops" onclick="showCodeSection('loops')">Loops</button>
+                <button data-code-view="objects" onclick="showCodeSection('objects')">Objects</button>
+                <button data-code-view="errors" onclick="showCodeSection('errors')">Errors</button>
+            </div>
+
+            <div class="editor-frame">
+                <div id="lineNumbers" class="line-numbers" aria-hidden="true"></div>
+                <textarea id="code" spellcheck="false" aria-label="Python code editor">class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def greet(self):
+        return f"Hello, I'm {self.name}"
+
+x = Person("vishal", 80)
+print(x.greet())</textarea>
+            </div>
+
+            <details id="programInputBox" class="program-input-box">
+                <summary class="program-input-summary">
+                    <span class="dropdown-icon input-toggle" aria-hidden="true"></span>
+                    <span>
+                        <span class="program-input-label">Program input</span>
+                        <span id="programInputHint" class="program-input-hint">One line is used for each input() call.</span>
+                    </span>
+                </summary>
+                <div class="program-input-detail">
+                    <div id="programInputPrompt" class="program-input-prompt" hidden></div>
+                    <textarea id="programInput" spellcheck="false" aria-label="Program input" placeholder="Example:&#10;42&#10;Vishal"></textarea>
+                    <button id="programInputContinue" class="program-input-continue" type="button" onclick="continueWithInput()" hidden>Continue</button>
+                </div>
+            </details>
+
+            <div class="control-bar">
+                <div class="step-controls">
+                    <button onclick="prevStep()">Previous</button>
+                    <button onclick="nextStep()">Next</button>
+                </div>
+                <div class="play-controls">
+                    <button onclick="play()">Play</button>
+                    <button onclick="pause()">Pause</button>
+                </div>
+                <label class="speed-control" for="speed">
+                    Speed
+                    <select id="speed" onchange="updateSpeed()">
+                        <option value="2500">Slow - 2.5s</option>
+                        <option value="1200" selected>Normal - 1.2s</option>
+                        <option value="600">Fast - 0.6s</option>
+                        <option value="300">Very fast - 0.3s</option>
+                    </select>
+                </label>
+            </div>
+
+            <details id="errorBox" class="error-box" hidden>
+                <summary class="error-summary">
+                    <span class="dropdown-icon error-toggle" aria-hidden="true"></span>
+                    <span>
+                        <span class="error-label">Error found</span>
+                        <span id="errorHeadline" class="error-headline">Python stopped.</span>
+                    </span>
+                </summary>
+                <div class="error-detail">
+                    <p id="errorSimple" class="error-simple"></p>
+                    <div class="error-actions">
+                        <button id="aiErrorExplainButton" type="button" onclick="explainErrorWithAI()">Explain Simply</button>
+                        <button id="aiFixButton" type="button" onclick="fixErrorWithAI()">Fix Code</button>
+                    </div>
+                    <div id="aiErrorHelpBox" class="ai-error-help-box empty-state">Open this box, then choose Explain Simply or Fix Code.</div>
+                    <div id="fixedCodeBox" class="fixed-code-box" hidden>
+                        <div class="fixed-code-head">
+                            <span>AI fixed version</span>
+                            <button type="button" onclick="applyAIFix()">Apply Fix</button>
+                        </div>
+                        <pre id="fixedCodePreview"></pre>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section class="trace-pane">
+            <header class="trace-header">
+                <div>
+                    <p class="eyebrow">CONCEPT MIND MAP</p>
+                    <h2 id="stepCounter">Not run yet</h2>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </header>
+
+            <div class="flow-legend" aria-label="Mind map legend">
+                <span><i class="legend-dot normal"></i>Idea</span>
+                <span><i class="legend-dot call"></i>Call</span>
+                <span><i class="legend-dot return"></i>Return</span>
+                <span><i class="legend-dot error"></i>Error</span>
+            </div>
+
+            <div id="flowMap" class="flow-map">
+                <div id="flowContent" class="flow-content">
+                    <svg id="flowSvg" class="flow-svg"></svg>
+                    <div id="flowEmpty" class="flow-empty">Run code to build the code mind map.</div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="inspector-pane">
+            <section class="current-step">
+                <div class="current-step-head">
+                    <p class="eyebrow">Current step</p>
+                    <button id="aiExplainButton" class="ai-button" type="button" onclick="explainWithAI()">AI Explain</button>
+                </div>
+                <h2 id="stepTitle">Waiting for code</h2>
+                <p id="stepExplain">Run the code to see the first action.</p>
+                <div id="aiExplainBox" class="ai-explain-box empty-state">Run code, then click AI Explain.</div>
+                <div id="flow" class="flow-box"></div>
+            </section>
+
+            <section class="output-section">
+                <div class="section-head">
+                    <h2>Program Output</h2>
+                    <span id="printCount">0 outputs</span>
+                </div>
+                <div id="outputBox" class="output-box empty-state">Nothing printed yet.</div>
+            </section>
+
+            <details class="inspector-dropdown" open>
+                <summary class="section-head">
+                    <span class="dropdown-icon" aria-hidden="true"></span>
+                    <h2>Code History</h2>
+                    <span id="historyCount">0 saved</span>
+                </summary>
+                <div id="historyList" class="history-list empty-state">Executed code appears here.</div>
+            </details>
+
+            <details class="inspector-dropdown" open>
+                <summary class="section-head">
+                    <span class="dropdown-icon" aria-hidden="true"></span>
+                    <h2>Memory</h2>
+                    <span id="memoryCount">0 values</span>
+                </summary>
+                <div id="variables" class="variables empty-state">Run code to see stored values.</div>
+            </details>
+
+            <details class="inspector-dropdown">
+                <summary class="section-head">
+                    <span class="dropdown-icon" aria-hidden="true"></span>
+                    <h2>Seen So Far</h2>
+                    <span id="encounterCount">0 items</span>
+                </summary>
+                <div id="encounteredList" class="timeline-list empty-state">New names appear here.</div>
+            </details>
+
+            <details class="inspector-dropdown">
+                <summary class="section-head">
+                    <span class="dropdown-icon" aria-hidden="true"></span>
+                    <h2>Latest Changes</h2>
+                    <span id="changeCount">0 changes</span>
+                </summary>
+                <div id="changeList" class="timeline-list empty-state">Updates appear here.</div>
+            </details>
+
+        </aside>
+    </main>
+
+    <script src="script.js?v=input-2"></script>
+</body>
+</html>
