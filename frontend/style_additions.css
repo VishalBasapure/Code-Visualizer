@@ -1,0 +1,548 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   style_additions.css  — load AFTER style.css
+   Adds: dark mode · sidebar · resize handles · middle controls
+         language selector · icon buttons · layout fixes
+═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Dark Mode Variables ────────────────────────────────────────────── */
+[data-theme="dark"] {
+    color-scheme: dark;
+    background: #0f1117;
+    color: #e6edf7;
+    --paper: #161b22;
+    --paper-soft: #1c2333;
+    --ink-soft: #8b949e;
+    --line: #30363d;
+    --line-strong: #444c56;
+    --blue: #58a6ff;
+    --teal: #3fb9ab;
+    --amber: #f4b63f;
+    --red: #f85149;
+    --green: #3fb950;
+}
+
+[data-theme="dark"] body          { background: #0f1117; }
+[data-theme="dark"] .editor-pane  { background: #161b22; }
+[data-theme="dark"] .trace-pane   { background: #0d1117; }
+[data-theme="dark"] .inspector-pane { background: #161b22; }
+[data-theme="dark"] textarea,
+[data-theme="dark"] #lineNumbers  { background: #0d1117; color: #c9d1d9; }
+[data-theme="dark"] .editor-frame { background: #0d1117; border-color: #30363d; }
+[data-theme="dark"] .output-box   { background: #0d1117; }
+[data-theme="dark"] .flow-map     { background: #0d1117; border-color: #30363d; }
+[data-theme="dark"] .step-info-box,
+[data-theme="dark"] .ai-section,
+[data-theme="dark"] .middle-controls { background: #161b22; border-color: #30363d; }
+[data-theme="dark"] .inspector-dropdown { border-color: #30363d; background: #0d1117; }
+[data-theme="dark"] button        { background: #21262d; color: #c9d1d9; border-color: #444c56; }
+[data-theme="dark"] button:hover  { border-color: var(--blue); color: var(--blue); background: #161b22; }
+[data-theme="dark"] .primary-button { background: var(--blue); color: #fff; border-color: var(--blue); }
+[data-theme="dark"] .primary-button:hover { background: #4a90e2; }
+[data-theme="dark"] .lang-select,
+[data-theme="dark"] .speed-select { background: #21262d; color: #c9d1d9; border-color: #444c56; }
+[data-theme="dark"] .sidebar      { background: #161b22; border-color: #30363d; }
+[data-theme="dark"] .history-item { background: #1c2333; border-color: #30363d; }
+[data-theme="dark"] .var-box      { background: #1c2333; border-color: #30363d; }
+[data-theme="dark"] .var-name,
+[data-theme="dark"] .timeline-title { color: #e6edf7; }
+[data-theme="dark"] .program-input-box { background: #1c2333; border-color: #3fb9ab44; }
+[data-theme="dark"] .error-box    { background: #2d1a1a; border-color: #f8514966; }
+[data-theme="dark"] .fixed-code-preview { background: #0d1117; color: #c9d1d9; border-color: #30363d; }
+[data-theme="dark"] .flow-empty-state { color: #8b949e; }
+[data-theme="dark"] .step-explain,
+[data-theme="dark"] .flow-text    { color: #8b949e; }
+
+/* ── Layout — flex replaces the grid so handles work ───────────────── */
+.workspace {
+    display: flex !important;
+    grid-template-columns: unset !important;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.editor-pane {
+    flex: 0 0 340px;
+    min-width: 220px;
+    overflow-y: auto;
+}
+
+.trace-pane {
+    flex: 1.8 1 auto;
+    min-width: 420px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.inspector-pane {
+    flex: 0 0 280px;
+    min-width: 190px;
+}
+
+/* ── Resize handles ─────────────────────────────────────────────────── */
+.resize-handle {
+    flex: 0 0 5px;
+    background: var(--line);
+    cursor: col-resize;
+    transition: background 0.15s;
+    user-select: none;
+    z-index: 10;
+}
+.resize-handle:hover,
+.resize-handle.dragging { background: var(--blue); }
+
+/* ── Sidebar ────────────────────────────────────────────────────────── */
+:root {
+    --history-font-size: 14px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 340px;
+    height: 100vh;
+    background: var(--paper);
+    border-left: 1px solid var(--line);
+    box-shadow: -4px 0 24px rgba(0,0,0,.14);
+    transform: translateX(100%);
+    transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 12px 8px;
+}
+
+.sidebar-text-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sidebar-text-btn {
+    min-width: 36px;
+    padding: 4px 8px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.history-list {
+    font-size: var(--history-font-size);
+}
+
+.history-item {
+    font-size: var(--history-font-size);
+}
+
+.history-title,
+.history-meta,
+.history-preview {
+    font-size: inherit;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+}
+.sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--line);
+    flex: 0 0 auto;
+}
+.sidebar-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+}
+.sidebar-close-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+}
+.sidebar > .history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+}
+
+/* ── Icon buttons (theme / history toggle / sidebar close) ─────────── */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+.icon-btn:hover { border-color: var(--blue); }
+
+/* ── Topbar actions row ─────────────────────────────────────────────── */
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* ── Language selector + badge ──────────────────────────────────────── */
+.lang-select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--paper);
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+}
+.lang-select:hover { border-color: var(--blue); }
+
+.lang-badge {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 600;
+}
+
+/* ── Flow map fills trace pane ──────────────────────────────────────── */
+.flow-map {
+    flex: 1;
+    min-height: 180px;
+    overflow: auto;
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    margin: 8px 0;
+}
+
+.flow-content {
+    position: relative;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.flow-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+.flow-empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--ink-soft);
+    text-align: center;
+    padding: 24px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* ── Flow legend chips ──────────────────────────────────────────────── */
+.flow-legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+.legend-pill {
+    font-size: 11px;
+    font-weight: 700;
+}
+.legend-pill.idea  { color: var(--blue); }
+.legend-pill.call  { color: var(--teal); }
+.legend-pill.ret   { color: var(--green); }
+.legend-pill.err   { color: var(--red); }
+
+/* ── Step counter badge ─────────────────────────────────────────────── */
+.step-counter-badge {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 4px 10px;
+}
+
+/* ── Step info box ──────────────────────────────────────────────────── */
+.step-info-box {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    flex: 0 0 auto;
+}
+.step-title {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 800;
+}
+.step-explain {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    margin-bottom: 10px;
+}
+.progress-bar {
+    height: 4px;
+    border-radius: 99px;
+    background: var(--line);
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+.progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+.flow-text {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    min-height: 16px;
+}
+
+/* ── AI Explain section ─────────────────────────────────────────────── */
+.ai-section {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+.ai-explain-btn {
+    align-self: flex-start;
+    border-color: var(--blue);
+    color: var(--blue);
+    font-weight: 700;
+    padding: 6px 12px;
+}
+.ai-explain-btn:hover {
+    background: #eef5ff;
+    border-color: var(--blue);
+}
+.ai-explain-box {
+    font-size: 13px;
+    line-height: 1.5;
+}
+.ai-explain-title {
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 3px;
+    margin-top: 8px;
+}
+.ai-explain-title:first-child { margin-top: 0; }
+.ai-explain-text {
+    font-size: 13px;
+    color: #172033;
+    line-height: 1.45;
+}
+[data-theme="dark"] .ai-explain-text { color: #e6edf7; }
+
+/* ── Middle playback controls ───────────────────────────────────────── */
+.middle-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    flex: 0 0 auto;
+}
+.ctrl-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 8px;
+    font-size: 16px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-soft);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.ctrl-btn:hover {
+    border-color: var(--blue);
+    background: #eef5ff;
+    transform: scale(1.06);
+}
+.ctrl-btn.play-ctrl {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+}
+.ctrl-btn.play-ctrl:hover {
+    background: #1d4ed8;
+    color: white;
+    transform: scale(1.08);
+}
+.speed-select {
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: var(--paper);
+    color: inherit;
+    font: 12px/1 inherit;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+/* ── Section count badge in inspector ──────────────────────────────── */
+.section-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+/* ── Fixed code preview (resizable) ─────────────────────────────────── */
+.fixed-code-container {
+    margin-top: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.fixed-code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--paper-soft);
+    border-bottom: 1px solid var(--line);
+}
+.fixed-code-preview {
+    display: block;
+    width: 100%;
+    min-height: 80px;
+    max-height: 320px;
+    overflow: auto;
+    resize: vertical;
+    margin: 0;
+    padding: 10px 12px;
+    background: #101828;
+    color: #e6edf7;
+    font: 12px/1.5 Consolas, "Courier New", monospace;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    border: none;
+}
+[data-theme="dark"] .fixed-code-preview { background: #0d1117; }
+
+/* ── Error action buttons ────────────────────────────────────────────── */
+.error-action-btn {
+    flex: 1;
+}
+.error-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* ── Inspector pane scrolls properly ────────────────────────────────── */
+.inspector-pane {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+/* Trace pane padding adjustment */
+.trace-pane { padding: 16px; gap: 8px; }
+
+/* Warm-up notice when backend cold-starts */
+.warmup-notice {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #172033;
+    color: #e6edf7;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.3);
+    z-index: 500;
+    animation: fade-in 0.3s ease;
+    white-space: nowrap;
+}
+@keyframes fade-in { from { opacity: 0; transform: translateX(-50%) translateY(8px); } }
+
+/* ── Java / C++ info banner ─────────────────────────────────────────── */
+.lang-info-banner {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--amber);
+    border-radius: 8px;
+    background: #fffbf0;
+    color: #78350f;
+    font-size: 13px;
+    line-height: 1.45;
+    display: none;
+}
+.lang-info-banner.visible { display: block; }
+[data-theme="dark"] .lang-info-banner { background: #1f1a0e; color: #fde68a; }
+
+/* ── Responsive — keep behaviour for small screens ──────────────────── */
+@media (max-width: 1100px) {
+    .workspace { flex-wrap: wrap; height: auto; overflow: auto; }
+    .editor-pane  { flex: 0 0 100%; height: auto; }
+    .resize-handle { display: none; }
+    .trace-pane   { flex: 0 0 100%; height: auto; overflow: visible; }
+    .inspector-pane { flex: 0 0 100%; height: auto; }
+    .flow-map { min-height: 380px; }
+}

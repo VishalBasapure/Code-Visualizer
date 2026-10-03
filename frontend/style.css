@@ -23,6 +23,13 @@ body {
     margin: 0;
     background: #eef3f8;
     overflow: hidden;
+    min-width: 1280px;
+    min-height: 760px;
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
 }
 
 button,
@@ -33,8 +40,11 @@ input {
 
 .workspace {
     display: grid;
-    grid-template-columns: minmax(380px, 34%) minmax(500px, 41%) minmax(310px, 25%);
+    grid-template-columns: minmax(380px, 34%) minmax(520px, 42%) minmax(270px, 24%);
+    width: 100vw;
     height: 100vh;
+    min-width: 1280px;
+    min-height: 760px;
 }
 
 .editor-pane,
@@ -1168,15 +1178,17 @@ textarea {
     border-radius: 8px;
     padding: 10px;
     background: var(--paper-soft);
+    font-size: var(--history-font-size);
 }
 
 .history-content {
     min-width: 0;
+    font-size: inherit;
 }
 
 .history-title {
     color: #172033;
-    font-size: 14px;
+    font-size: var(--history-font-size);
     font-weight: 800;
     line-height: 1.25;
     overflow-wrap: anywhere;
@@ -1185,14 +1197,14 @@ textarea {
 .history-meta {
     margin-top: 4px;
     color: var(--ink-soft);
-    font-size: 12px;
+    font-size: calc(var(--history-font-size) * 0.9);
     font-weight: 700;
 }
 
 .history-preview {
     margin-top: 6px;
     color: #344054;
-    font: 12px/1.35 Consolas, "Courier New", monospace;
+    font: calc(var(--history-font-size) * 0.9)/1.35 Consolas, "Courier New", monospace;
     overflow-wrap: anywhere;
 }
 
