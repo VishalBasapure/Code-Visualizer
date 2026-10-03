@@ -89,7 +89,7 @@ input {
 .eyebrow {
     margin: 0 0 4px;
     color: var(--teal);
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     font-weight: 800;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -102,11 +102,11 @@ h2 {
 }
 
 h1 {
-    font-size: 25px;
+    font-size: calc(25px * var(--ui-scale, 1));
 }
 
 h2 {
-    font-size: 17px;
+    font-size: calc(17px * var(--ui-scale, 1));
 }
 
 button {
@@ -171,7 +171,7 @@ button:hover {
     border-right: 1px solid #e1e8f2;
     background: #f4f8fc;
     color: #75849a;
-    font: 14px/1.55 Consolas, "Courier New", monospace;
+    font: calc(14px * var(--ui-scale, 1))/1.55 Consolas, "Courier New", monospace;
     text-align: right;
     user-select: none;
     overflow: hidden;
@@ -198,7 +198,7 @@ textarea {
     padding: 14px;
     color: #101828;
     background: #fbfdff;
-    font: 14px/1.55 Consolas, "Courier New", monospace;
+    font: calc(14px * var(--ui-scale, 1))/1.55 Consolas, "Courier New", monospace;
     tab-size: 4;
     outline: none;
 }
@@ -248,7 +248,7 @@ textarea {
 }
 
 .step-controls button {
-    font-size: 15px;
+    font-size: calc(15px * var(--ui-scale, 1));
 }
 
 .play-controls button:hover {
@@ -268,7 +268,7 @@ textarea {
     border: 1px solid #dce5f1;
     border-radius: 8px;
     background: #f8fbff;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     font-weight: 700;
     min-height: 56px;
 }
@@ -288,7 +288,7 @@ textarea {
 .speed-control span {
     white-space: nowrap;
     color: #4b5563;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     font-weight: 700;
 }
 
@@ -338,7 +338,7 @@ textarea {
 .program-input-label {
     display: block;
     color: var(--teal);
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 900;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -348,7 +348,7 @@ textarea {
     display: block;
     margin-top: 2px;
     color: #36505c;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     line-height: 1.35;
 }
 
@@ -367,7 +367,7 @@ textarea {
     padding: 10px;
     background: #ffffff;
     resize: vertical;
-    font: 13px/1.45 Consolas, "Courier New", monospace;
+    font: calc(13px * var(--ui-scale, 1))/1.45 Consolas, "Courier New", monospace;
 }
 
 .program-input-prompt {
@@ -377,7 +377,7 @@ textarea {
     padding: 9px 10px;
     background: #ffffff;
     color: #0b6f65;
-    font: 13px/1.45 Consolas, "Courier New", monospace;
+    font: calc(13px * var(--ui-scale, 1))/1.45 Consolas, "Courier New", monospace;
     overflow-wrap: anywhere;
 }
 
@@ -386,7 +386,7 @@ textarea {
     display: block;
     margin-bottom: 3px;
     color: var(--teal);
-    font: 10px/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+    font: calc(10px * var(--ui-scale, 1))/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
     font-weight: 900;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -440,7 +440,7 @@ textarea {
 .error-label {
     display: block;
     color: var(--red);
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 900;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -450,7 +450,7 @@ textarea {
     display: block;
     margin-top: 2px;
     color: #7f1d1d;
-    font: 13px/1.35 Consolas, "Courier New", monospace;
+    font: calc(13px * var(--ui-scale, 1))/1.35 Consolas, "Courier New", monospace;
     overflow-wrap: anywhere;
 }
 
@@ -462,7 +462,7 @@ textarea {
 .error-simple {
     margin: 10px 0;
     color: #344054;
-    font-size: 14px;
+    font-size: calc(14px * var(--ui-scale, 1));
     line-height: 1.45;
 }
 
@@ -511,7 +511,7 @@ textarea {
 .error-help-title,
 .fixed-code-head span {
     color: var(--red);
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 900;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -520,7 +520,7 @@ textarea {
 .error-help-text {
     margin-top: 4px;
     color: #344054;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     line-height: 1.45;
 }
 
@@ -544,7 +544,7 @@ textarea {
 
 .fixed-code-head button {
     padding: 6px 10px;
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
 }
 
 .fixed-code-box pre {
@@ -554,7 +554,7 @@ textarea {
     overflow: auto;
     color: #101828;
     background: #fbfdff;
-    font: 12px/1.45 Consolas, "Courier New", monospace;
+    font: calc(12px * var(--ui-scale, 1))/1.45 Consolas, "Courier New", monospace;
     white-space: pre-wrap;
 }
 
@@ -580,7 +580,7 @@ textarea {
     gap: 10px;
     margin-top: 14px;
     color: var(--ink-soft);
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
 }
 
 .flow-legend span {
@@ -798,7 +798,7 @@ textarea {
 
 .node-kind {
     color: var(--teal);
-    font-size: 10px;
+    font-size: calc(10px * var(--node-scale, 1));
     font-weight: 900;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -819,7 +819,7 @@ textarea {
 .node-title {
     margin-top: 3px;
     color: #172033;
-    font-size: 12px;
+    font-size: calc(12px * var(--node-scale, 1));
     font-weight: 800;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -840,17 +840,17 @@ textarea {
 }
 
 .mind-hub .node-title {
-    font-size: 14px;
+    font-size: calc(14px * var(--node-scale, 1));
 }
 
 .mind-node .node-title {
-    font-size: 13px;
+    font-size: calc(13px * var(--node-scale, 1));
 }
 
 .node-meta {
     margin-top: 3px;
     color: var(--ink-soft);
-    font: 11px/1.3 Consolas, "Courier New", monospace;
+    font: calc(11px * var(--node-scale, 1))/1.3 Consolas, "Courier New", monospace;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -865,7 +865,7 @@ textarea {
 .node-note {
     margin-top: 7px;
     color: #46546a;
-    font-size: 12px;
+    font-size: calc(12px * var(--node-scale, 1));
     line-height: 1.35;
     max-height: 48px;
     overflow: hidden;
@@ -973,7 +973,7 @@ textarea {
     background: #f4f9ff;
     color: var(--blue);
     padding: 6px 10px;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     font-weight: 800;
 }
 
@@ -1003,7 +1003,7 @@ textarea {
 
 .ai-explain-title {
     color: var(--teal);
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 800;
     letter-spacing: 0;
     text-transform: uppercase;
@@ -1011,7 +1011,7 @@ textarea {
 
 .ai-explain-text {
     margin-top: 4px;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     line-height: 1.45;
 }
 
@@ -1022,12 +1022,12 @@ textarea {
 .flow-box {
     margin-top: 12px;
     color: #344054;
-    font-size: 14px;
+    font-size: calc(14px * var(--ui-scale, 1));
 }
 
 .section-head span {
     color: var(--ink-soft);
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
 }
 
 .inspector-dropdown {
@@ -1115,7 +1115,7 @@ textarea {
 
 .var-label {
     color: var(--ink-soft);
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -1129,14 +1129,14 @@ textarea {
 .var-value {
     margin-top: 8px;
     color: #243044;
-    font: 13px/1.45 Consolas, "Courier New", monospace;
+    font: calc(13px * var(--ui-scale, 1))/1.45 Consolas, "Courier New", monospace;
     overflow-wrap: anywhere;
 }
 
 .var-change {
     margin-top: 8px;
     color: var(--green);
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     font-weight: 700;
 }
 
@@ -1153,7 +1153,7 @@ textarea {
     padding: 12px;
     background: #101828;
     color: #e6edf7;
-    font: 14px/1.5 Consolas, "Courier New", monospace;
+    font: calc(14px * var(--ui-scale, 1))/1.5 Consolas, "Courier New", monospace;
     white-space: pre-wrap;
 }
 
@@ -1219,7 +1219,7 @@ textarea {
     border-color: #cbd8ea;
     background: #ffffff;
     color: #1f3b64;
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     font-weight: 800;
 }
 
@@ -1296,7 +1296,7 @@ textarea {
     border-radius: 999px;
     background: #e7eef9;
     color: var(--blue);
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 800;
 }
 
@@ -1335,7 +1335,7 @@ textarea {
     font-weight: 800;
     color: #172033;
     overflow-wrap: anywhere;
-    font-size: 15px;
+    font-size: calc(15px * var(--ui-scale, 1));
     line-height: 1.2;
 }
 
@@ -1346,7 +1346,7 @@ textarea {
     padding: 2px 7px;
     color: var(--ink-soft);
     background: #ffffff;
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 800;
     text-transform: uppercase;
 }
@@ -1354,7 +1354,7 @@ textarea {
 .timeline-meta {
     margin-top: 4px;
     color: var(--ink-soft);
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     line-height: 1.35;
     overflow-wrap: anywhere;
 }
@@ -1362,7 +1362,7 @@ textarea {
 .timeline-value {
     margin-top: 4px;
     color: #344054;
-    font: 12px/1.35 Consolas, "Courier New", monospace;
+    font: calc(12px * var(--ui-scale, 1))/1.35 Consolas, "Courier New", monospace;
     overflow-wrap: anywhere;
 }
 

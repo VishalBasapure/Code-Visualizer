@@ -98,7 +98,7 @@
 
 /* ── Sidebar ────────────────────────────────────────────────────────── */
 :root {
-    --history-font-size: 14px;
+    --history-font-size: calc(14px * var(--ui-scale, 1));
 }
 
 .sidebar {
@@ -174,7 +174,7 @@
     flex: 0 0 auto;
 }
 .sidebar-count {
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     font-weight: 700;
     color: var(--ink-soft);
 }
@@ -185,7 +185,7 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    font-size: 14px;
+    font-size: calc(14px * var(--ui-scale, 1));
 }
 .sidebar > .history-list {
     flex: 1;
@@ -201,7 +201,7 @@
     border-radius: 8px;
     display: grid;
     place-items: center;
-    font-size: 16px;
+    font-size: calc(16px * var(--ui-scale, 1));
     border: 1px solid var(--line-strong);
     background: var(--paper);
     cursor: pointer;
@@ -228,13 +228,13 @@
     color: inherit;
     cursor: pointer;
     font: inherit;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
 }
 .lang-select:hover { border-color: var(--blue); }
 
 .lang-badge {
     margin: 4px 0 0;
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     color: var(--ink-soft);
     font-weight: 600;
 }
@@ -274,7 +274,7 @@
     color: var(--ink-soft);
     text-align: center;
     padding: 24px;
-    font-size: 14px;
+    font-size: calc(14px * var(--ui-scale, 1));
     white-space: nowrap;
 }
 
@@ -286,7 +286,7 @@
     margin-top: 4px;
 }
 .legend-pill {
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 700;
 }
 .legend-pill.idea  { color: var(--blue); }
@@ -296,7 +296,7 @@
 
 /* ── Step counter badge ─────────────────────────────────────────────── */
 .step-counter-badge {
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     font-weight: 700;
     color: var(--ink-soft);
     white-space: nowrap;
@@ -316,11 +316,11 @@
 }
 .step-title {
     margin: 0 0 4px;
-    font-size: 15px;
+    font-size: calc(15px * var(--ui-scale, 1));
     font-weight: 800;
 }
 .step-explain {
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     color: var(--ink-soft);
     line-height: 1.45;
     margin-bottom: 10px;
@@ -340,7 +340,7 @@
     width: 0%;
 }
 .flow-text {
-    font-size: 12px;
+    font-size: calc(12px * var(--ui-scale, 1));
     color: var(--ink-soft);
     font-weight: 600;
     min-height: 16px;
@@ -369,11 +369,11 @@
     border-color: var(--blue);
 }
 .ai-explain-box {
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     line-height: 1.5;
 }
 .ai-explain-title {
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 900;
     text-transform: uppercase;
     color: var(--ink-soft);
@@ -382,7 +382,7 @@
 }
 .ai-explain-title:first-child { margin-top: 0; }
 .ai-explain-text {
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     color: #172033;
     line-height: 1.45;
 }
@@ -408,7 +408,7 @@
     height: 40px;
     padding: 0;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: calc(16px * var(--ui-scale, 1));
     border: 1px solid var(--line-strong);
     background: var(--paper-soft);
     cursor: pointer;
@@ -424,7 +424,7 @@
 .ctrl-btn.play-ctrl {
     width: 48px;
     height: 48px;
-    font-size: 18px;
+    font-size: calc(18px * var(--ui-scale, 1));
     background: var(--blue);
     color: white;
     border-color: var(--blue);
@@ -441,14 +441,14 @@
     border-radius: 8px;
     background: var(--paper);
     color: inherit;
-    font: 12px/1 inherit;
+    font: calc(12px * var(--ui-scale, 1))/1 inherit;
     cursor: pointer;
     min-width: 120px;
 }
 
 /* ── Section count badge in inspector ──────────────────────────────── */
 .section-count {
-    font-size: 11px;
+    font-size: calc(11px * var(--ui-scale, 1));
     font-weight: 700;
     color: var(--ink-soft);
     background: var(--paper-soft);
@@ -485,7 +485,7 @@
     padding: 10px 12px;
     background: #101828;
     color: #e6edf7;
-    font: 12px/1.5 Consolas, "Courier New", monospace;
+    font: calc(12px * var(--ui-scale, 1))/1.5 Consolas, "Courier New", monospace;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     border: none;
@@ -520,7 +520,7 @@
     transform: translateX(-50%);
     background: #172033;
     color: #e6edf7;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     padding: 10px 18px;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0,0,0,.3);
@@ -538,7 +538,7 @@
     border-radius: 8px;
     background: #fffbf0;
     color: #78350f;
-    font-size: 13px;
+    font-size: calc(13px * var(--ui-scale, 1));
     line-height: 1.45;
     display: none;
 }
@@ -561,3 +561,14 @@
 .trace-pane > .flow-map { flex: 1 1 0; min-height: 160px; }
 .trace-pane > :not(.flow-map) { flex-shrink: 0; }
 .editor-pane, .inspector-pane { min-height: 0; }
+
+
+/* ── Bigger text must never resize the fixed-size mind-map cards ───── */
+.flow-node, .mind-root, .mind-hub, .mind-node {
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+.flow-node:hover, .mind-node:hover { overflow-y: auto; }
+
+/* Keep the header buttons from reflowing the editor column when text grows */
+.editor-pane, .trace-pane, .inspector-pane { overflow-wrap: anywhere; }
