@@ -46,42 +46,22 @@ function setHistoryTextSize(nextSize) {
     }
 }
 
-function setGlobalTextScale(nextScale) {
-    const scale = Math.min(1.5, Math.max(0.8, Number(nextScale) || 1));
-    document.body.style.zoom = String(scale);
-    document.documentElement.style.setProperty("--global-text-scale", String(scale));
-    try {
-        localStorage.setItem("cv.globalTextScale", String(scale));
-    } catch (error) {
-        // ignore localStorage failures
-    }
-}
-
 (function initHistoryTextSize() {
+    // FIX: body.style.zoom was persisted in localStorage and grew on every "A+" click.
+    // Combined with 100vh panes it pushed the Play/Pause row off-screen after reload.
+    // Zoom is removed; A+/A- now only resize the history list text.
+    try { localStorage.removeItem("cv.globalTextScale"); } catch (e) {}
+    document.body.style.zoom = "";
+
     const savedHistory = Number(localStorage.getItem("cv.historyTextSize") || "14");
     setHistoryTextSize(Number.isFinite(savedHistory) ? savedHistory : 14);
 
-    const savedScale = Number(localStorage.getItem("cv.globalTextScale") || "1");
-    setGlobalTextScale(Number.isFinite(savedScale) ? savedScale : 1);
-
     const up = document.getElementById("historyTextSizeUp");
     const down = document.getElementById("historyTextSizeDown");
-    if (up) {
-        up.addEventListener("click", () => {
-            const current = Number(document.body.style.zoom) || 1;
-            setGlobalTextScale(current + 0.1);
-            const historySize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--history-font-size")) || 14;
-            setHistoryTextSize(historySize + 1);
-        });
-    }
-    if (down) {
-        down.addEventListener("click", () => {
-            const current = Number(document.body.style.zoom) || 1;
-            setGlobalTextScale(current - 0.1);
-            const historySize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--history-font-size")) || 14;
-            setHistoryTextSize(historySize - 1);
-        });
-    }
+    const current = () =>
+        parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--history-font-size")) || 14;
+    if (up)   up.addEventListener("click",   () => setHistoryTextSize(current() + 1));
+    if (down) down.addEventListener("click", () => setHistoryTextSize(current() - 1));
 })();
 
 /* ── Tab key → 4 spaces in the code textarea ───────────────────────── */
@@ -150,7 +130,7 @@ function setGlobalTextScale(nextScale) {
     }
 
     function layoutDelta(dx) {
-        return dx / (Number(document.body.style.zoom) || 1);
+        return dx;
     }
 
     // Handle 1 — resize editor pane
@@ -300,9 +280,6 @@ function changeLanguage(lang) {
         ["localhost", "127.0.0.1"].includes(window.location.hostname)
             ? "http://127.0.0.1:8000"
             : "https://code-visualizer-otf6.onrender.com";
-
-    // Ping once after 1 s (warms up if user landed on a cold instance)
-    setTimeout(() => fetch(base + "/").catch(() => {}), 1000);
 
     // Then every 13 minutes to keep it warm
     setInterval(() => fetch(base + "/").catch(() => {}), 13 * 60 * 1000);

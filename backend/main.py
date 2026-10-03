@@ -7,6 +7,22 @@ import re
 import subprocess
 import tempfile
 
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# FIX (Gemini key invalid locally): load .env explicitly and let it OVERRIDE any stale
+# GEMINI_API_KEY already set in the Windows environment. Must run BEFORE importing
+# backend.llm_explainer.
+_ROOT = Path(__file__).resolve().parent
+for _env in (_ROOT / ".env", _ROOT.parent / ".env"):
+    if _env.exists():
+        load_dotenv(_env, override=True)
+        break
+for _name in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY"):
+    if os.environ.get(_name):
+        os.environ[_name] = os.environ[_name].strip().strip('"').strip("'")
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -37,6 +53,13 @@ _RUN_TIMEOUT     = 10
 @app.get("/")
 def home():
     return {"message": "Code Visualizer API running"}
+
+
+@app.get("/health")
+def health():
+    """Reports whether a key is loaded (never the key itself)."""
+    key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or ""
+    return {"ok": True, "gemini_key_loaded": bool(key), "gemini_key_length": len(key)}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -152,10 +175,9 @@ def _run_java(code: str):
         _write(src, code)
 
         # Compile
-        compile_result = subprocess.run(
-            ["javac", src],
-            capture_output=True, text=True, timeout=_COMPILE_TIMEOUT,
-        )
+        compile_result, err = _exec(["javac", src], _COMPILE_TIMEOUT, "Compilation")
+        if err:
+            return err
         if compile_result.returncode != 0:
             return JSONResponse(
                 status_code=422,
@@ -168,10 +190,9 @@ def _run_java(code: str):
             )
 
         # Run
-        run_result = subprocess.run(
-            ["java", "-cp", tmpdir, classname],
-            capture_output=True, text=True, timeout=_RUN_TIMEOUT,
-        )
+        run_result, err = _exec(["java", "-cp", tmpdir, classname], _RUN_TIMEOUT, "Execution")
+        if err:
+            return err
         return {
             "error": False,
             "output": run_result.stdout,
@@ -189,10 +210,9 @@ def _run_cpp(code: str):
         _write(src, code)
 
         # Compile
-        compile_result = subprocess.run(
-            ["g++", "-o", exe, src, "-std=c++17"],
-            capture_output=True, text=True, timeout=_COMPILE_TIMEOUT,
-        )
+        compile_result, err = _exec(["g++", "-o", exe, src, "-std=c++17"], _COMPILE_TIMEOUT, "Compilation")
+        if err:
+            return err
         if compile_result.returncode != 0:
             return JSONResponse(
                 status_code=422,
@@ -205,10 +225,9 @@ def _run_cpp(code: str):
             )
 
         # Run
-        run_result = subprocess.run(
-            [exe],
-            capture_output=True, text=True, timeout=_RUN_TIMEOUT,
-        )
+        run_result, err = _exec([exe], _RUN_TIMEOUT, "Execution")
+        if err:
+            return err
         return {
             "error": False,
             "output": run_result.stdout,
@@ -216,6 +235,20 @@ def _run_cpp(code: str):
             "return_code": run_result.returncode,
             "steps": [],
         }
+
+
+def _exec(cmd, timeout, stage):
+    """Run a command; return (result, None) or (None, JSONResponse error)."""
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout), None
+    except FileNotFoundError:
+        return None, JSONResponse(status_code=501, content={
+            "error": True, "error_type": "ToolchainMissing",
+            "error_message": f"'{cmd[0]}' is not installed on the server.", "output": ""})
+    except subprocess.TimeoutExpired:
+        return None, JSONResponse(status_code=408, content={
+            "error": True, "error_type": "Timeout",
+            "error_message": f"{stage} took longer than {timeout}s (infinite loop?).", "output": ""})
 
 
 def _write(path: str, content: str) -> None:

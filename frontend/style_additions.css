@@ -57,6 +57,7 @@
     display: flex !important;
     grid-template-columns: unset !important;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -71,8 +72,11 @@
     min-width: 420px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;      /* FIX: never clip the playback row */
+    overflow-x: hidden;
     height: 100vh;
+    height: 100dvh;
+    min-height: 0;
 }
 
 .inspector-pane {
@@ -237,8 +241,9 @@
 
 /* ── Flow map fills trace pane ──────────────────────────────────────── */
 .flow-map {
-    flex: 1;
-    min-height: 180px;
+    flex: 1 1 0;
+    height: auto;          /* FIX: style.css gave it calc(100vh - 134px) */
+    min-height: 160px;
     overflow: auto;
     position: relative;
     border: 1px solid var(--line);
@@ -394,6 +399,9 @@
     border: 1px solid var(--line);
     border-radius: 10px;
     flex: 0 0 auto;
+    position: sticky;      /* FIX: controls stay visible even on short screens */
+    bottom: 0;
+    z-index: 5;
 }
 .ctrl-btn {
     width: 40px;
@@ -546,3 +554,10 @@
     .inspector-pane { flex: 0 0 100%; height: auto; }
     .flow-map { min-height: 380px; }
 }
+
+
+/* ── Fixes: keep every trace-pane child from collapsing/overflowing ── */
+.trace-pane > * { min-width: 0; }
+.trace-pane > .flow-map { flex: 1 1 0; min-height: 160px; }
+.trace-pane > :not(.flow-map) { flex-shrink: 0; }
+.editor-pane, .inspector-pane { min-height: 0; }
