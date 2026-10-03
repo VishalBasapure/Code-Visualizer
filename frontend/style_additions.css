@@ -262,6 +262,12 @@
     position: absolute;
     top: 0;
     left: 0;
+    right: auto;           /* FIX: style.css used inset:0 + width:100% */
+    bottom: auto;
+    width: auto;           /* use the width/height ATTRIBUTES set by script.js */
+    height: auto;
+    min-width: 0;
+    max-width: none;
     pointer-events: none;
     overflow: visible;
 }

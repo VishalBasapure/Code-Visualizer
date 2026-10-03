@@ -227,8 +227,8 @@ function renderFlowMap(activeIndex = -1) {
     svg.setAttribute("viewBox", `0 0 ${layout.width} ${layout.height}`);
     svg.innerHTML = `
         <defs>
-            <marker id="flowArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
-                <path d="M0,0 L10,4 L0,8 Z" fill="currentColor"></path>
+            <marker id="flowArrow" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto">
+                <path d="M0,0 L12,5 L0,10 Z" fill="currentColor"></path>
             </marker>
         </defs>
     `;
