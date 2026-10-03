@@ -22,7 +22,7 @@ function toggleTheme() {
 }
 
 /* ── Sidebar ────────────────────────────────────────────────────────── */
-let _sidebarOpen = false;
+var _sidebarOpen = false;
 
 function toggleSidebar() {
     _sidebarOpen = !_sidebarOpen;
@@ -36,32 +36,48 @@ function toggleSidebar() {
     }
 }
 
-function setHistoryTextSize(nextSize) {
-    const size = Math.min(22, Math.max(12, Number(nextSize) || 14));
-    document.documentElement.style.setProperty("--history-font-size", `${size}px`);
-    try {
-        localStorage.setItem("cv.historyTextSize", String(size));
-    } catch (error) {
-        // ignore localStorage failures
-    }
+/* ── Global text size (A- / A+) ──────────────────────────────────────
+   Only FONT sizes change. Every font-size in style.css / style_additions.css is
+   written as calc(Npx * var(--ui-scale)), so panes, columns, heights and the
+   mind-map layout keep exactly the same pixel size. No CSS zoom is used.        */
+var UI_SCALE_MIN = 0.8, UI_SCALE_MAX = 1.5, UI_SCALE_STEP = 0.1;
+var UI_SCALE_KEY = "cv.uiScale";
+
+function setUiScale(next) {
+    let scale = Math.round((Number(next) || 1) * 10) / 10;
+    scale = Math.min(UI_SCALE_MAX, Math.max(UI_SCALE_MIN, scale));
+    const root = document.documentElement;
+    root.style.setProperty("--ui-scale", String(scale));
+    // Mind-map cards have a fixed pixel size, so their text grows at half speed.
+    root.style.setProperty("--node-scale", String(1 + (scale - 1) * 0.5));
+    try { localStorage.setItem(UI_SCALE_KEY, String(scale)); } catch (e) {}
+    const up = document.getElementById("historyTextSizeUp");
+    const down = document.getElementById("historyTextSizeDown");
+    if (up)   up.disabled   = scale >= UI_SCALE_MAX;
+    if (down) down.disabled = scale <= UI_SCALE_MIN;
+    return scale;
+}
+function currentUiScale() {
+    return Number(document.documentElement.style.getPropertyValue("--ui-scale")) || 1;
 }
 
-(function initHistoryTextSize() {
-    // FIX: body.style.zoom was persisted in localStorage and grew on every "A+" click.
-    // Combined with 100vh panes it pushed the Play/Pause row off-screen after reload.
-    // Zoom is removed; A+/A- now only resize the history list text.
-    try { localStorage.removeItem("cv.globalTextScale"); } catch (e) {}
+(function initUiScale() {
+    // Clean up old experiments (zoom + separate history size)
+    try {
+        localStorage.removeItem("cv.globalTextScale");
+        localStorage.removeItem("cv.historyTextSize");
+    } catch (e) {}
     document.body.style.zoom = "";
+    document.documentElement.style.removeProperty("--history-font-size");
 
-    const savedHistory = Number(localStorage.getItem("cv.historyTextSize") || "14");
-    setHistoryTextSize(Number.isFinite(savedHistory) ? savedHistory : 14);
+    let saved = 1;
+    try { saved = Number(localStorage.getItem(UI_SCALE_KEY)) || 1; } catch (e) {}
+    setUiScale(saved);
 
     const up = document.getElementById("historyTextSizeUp");
     const down = document.getElementById("historyTextSizeDown");
-    const current = () =>
-        parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--history-font-size")) || 14;
-    if (up)   up.addEventListener("click",   () => setHistoryTextSize(current() + 1));
-    if (down) down.addEventListener("click", () => setHistoryTextSize(current() - 1));
+    if (up)   up.addEventListener("click",   () => setUiScale(currentUiScale() + UI_SCALE_STEP));
+    if (down) down.addEventListener("click", () => setUiScale(currentUiScale() - UI_SCALE_STEP));
 })();
 
 /* ── Tab key → 4 spaces in the code textarea ───────────────────────── */
@@ -149,7 +165,7 @@ function setHistoryTextSize(nextSize) {
 })();
 
 /* ── Language selector ──────────────────────────────────────────────── */
-let _currentLanguage = "python";
+var _currentLanguage = "python";
 
 function changeLanguage(lang) {
     _currentLanguage = lang;
@@ -200,6 +216,13 @@ function changeLanguage(lang) {
             if (originalRunCode) {
                 return originalRunCode.apply(this, arguments);
             }
+            // script.js is missing / wrong file -> say so instead of failing silently
+            console.error("[Code Visualizer] script.js did not load: runCode() is missing.");
+            const msg = document.createElement("div");
+            msg.className = "warmup-notice";
+            msg.textContent = "⚠️ script.js did not load correctly. Re-deploy the real script.js, then hard refresh.";
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 8000);
             return;
         }
 
