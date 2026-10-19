@@ -461,6 +461,29 @@ class ExecutionTracer:
             )
 
     def _builtins(self):
+        allowed_modules = {
+            "array",
+            "bisect",
+            "cmath",
+            "collections",
+            "decimal",
+            "fractions",
+            "functools",
+            "heapq",
+            "itertools",
+            "math",
+            "operator",
+            "random",
+            "re",
+            "statistics",
+            "string",
+        }
+
+        def safe_import(name, globals=None, locals=None, fromlist=(), level=0):
+            if level != 0 or name not in allowed_modules:
+                raise ImportError(f"Import of '{name}' is not allowed in the visualizer.")
+            return builtins.__import__(name, globals, locals, fromlist, level)
+
         names = [
             "__build_class__",
             "abs",
@@ -510,6 +533,7 @@ class ExecutionTracer:
         ]
         available = {name: getattr(builtins, name) for name in names if name != "input"}
         available["input"] = self._input
+        available["__import__"] = safe_import
         return available
 
 
