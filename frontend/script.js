@@ -17,7 +17,7 @@ const CODE_HISTORY_KEY = "codeVisualizer.history.v1";
 const CODE_HISTORY_LIMIT = 5;
 const API_BASE_URL =
     ["localhost", "127.0.0.1"].includes(window.location.hostname)
-        ? "http://127.0.0.1:8000"
+        ? "http://127.0.0.1:8001"
         : "https://code-visualizer-otf6.onrender.com";
 async function runCode() {
     const code = document.getElementById("code").value;
@@ -93,7 +93,7 @@ async function runCode() {
 
         showStep();
     } catch (error) {
-        showError("ConnectionError", "Could not reach the backend on port 8000.", null);
+        showError("ConnectionError", `Could not reach the backend at ${API_BASE_URL}.`, null);
         setStepMessage("Backend not connected", "Start the FastAPI server, then run the code again.");
     }
 }

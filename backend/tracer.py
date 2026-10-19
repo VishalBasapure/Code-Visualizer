@@ -6,7 +6,9 @@ import ast
 import builtins
 import contextlib
 import io
+import math
 import sys
+import types
 
 MAX_STEPS = 1000
 USER_CODE_FILENAME = "<user_code>"
@@ -271,8 +273,12 @@ class ExecutionTracer:
         return serialized
 
     def _serialize_value(self, value):
+        if isinstance(value, float) and not math.isfinite(value):
+            return repr(value)
         if isinstance(value, (int, float, str, bool, type(None))):
             return value
+        if isinstance(value, types.ModuleType):
+            return {"type": "module", "name": value.__name__}
         if isinstance(value, (list, tuple)):
             return [self._serialize_value(item) for item in value]
         if isinstance(value, dict):
